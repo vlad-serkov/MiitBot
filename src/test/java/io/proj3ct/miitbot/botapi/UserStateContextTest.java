@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-class BotStateContextTest {
+class UserStateContextTest {
 
     @Test
     void processInputMessage() {

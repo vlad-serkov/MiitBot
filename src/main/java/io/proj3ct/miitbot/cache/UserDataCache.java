@@ -1,8 +1,9 @@
-package ru.home.mywizard_bot.cache;
+package io.proj3ct.miitbot.cache;
 
+import io.proj3ct.miitbot.constrants.UserState;
+import io.proj3ct.miitbot.constrants.BotState;
+import io.proj3ct.miitbot.dto.UserProfileData;
 import org.springframework.stereotype.Component;
-import ru.home.mywizard_bot.botapi.BotState;
-import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,36 +15,45 @@ import java.util.Map;
  */
 
 @Component
-public class UserDataCache implements DataCache {
-    private Map<Integer, BotState> usersBotStates = new HashMap<>();
-    private Map<Integer, UserProfileData> usersProfileData = new HashMap<>();
+public class UserDataCache implements DataCache{
+    private Map<Long, UserState> usersBotStates = new HashMap<>();
+    private Map<Long, UserProfileData> usersProfileData = new HashMap<>();
+
+    private Map<Long, BotState> usersFilingProfileState = new HashMap<>();
 
     @Override
-    public void setUsersCurrentBotState(int userId, BotState botState) {
-        usersBotStates.put(userId, botState);
+    public void setUsersCurrentUserState(Long userId, UserState userState) {
+        usersBotStates.put(userId, userState);
     }
-
     @Override
-    public BotState getUsersCurrentBotState(int userId) {
-        BotState botState = usersBotStates.get(userId);
-        if (botState == null) {
-            botState = BotState.ASK_DESTINY;
+    public UserState getUsersCurrentUserState(Long userId) {
+        UserState userState = usersBotStates.get(userId);
+        if (userState == null) {
+            return UserState.ASK_NAME;
         }
-
-        return botState;
+        return userState;
     }
-
     @Override
-    public UserProfileData getUserProfileData(int userId) {
+    public UserProfileData getUserProfileData(Long userId) {
         UserProfileData userProfileData = usersProfileData.get(userId);
         if (userProfileData == null) {
-            userProfileData = new UserProfileData();
+            return new UserProfileData();
         }
         return userProfileData;
     }
-
     @Override
-    public void saveUserProfileData(int userId, UserProfileData userProfileData) {
+    public void saveUserProfileData(Long userId, UserProfileData userProfileData) {
         usersProfileData.put(userId, userProfileData);
+    }
+    @Override
+    public void setUsersCurrentBotState(Long userId, BotState botState) {
+        usersFilingProfileState.put(userId, botState);
+    }
+    @Override
+    public BotState getUsersCurrentBotState(Long userId) {
+        if (usersFilingProfileState.get(userId)==null){
+            return BotState.SHOW_MENU;
+        }
+        return usersFilingProfileState.get(userId);
     }
 }

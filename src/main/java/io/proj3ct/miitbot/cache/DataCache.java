@@ -1,15 +1,21 @@
-package ru.home.mywizard_bot.cache;
+package io.proj3ct.miitbot.cache;
 
-import ru.home.mywizard_bot.botapi.BotState;
-import ru.home.mywizard_bot.botapi.handlers.fillingprofile.UserProfileData;
 
+import io.proj3ct.miitbot.constrants.UserState;
+import io.proj3ct.miitbot.constrants.BotState;
+import io.proj3ct.miitbot.dto.UserProfileData;
 
 public interface DataCache {
-    void setUsersCurrentBotState(int userId, BotState botState);
 
-    BotState getUsersCurrentBotState(int userId);
 
-    UserProfileData getUserProfileData(int userId);
+    void setUsersCurrentUserState(Long userId, UserState userState);
 
-    void saveUserProfileData(int userId, UserProfileData userProfileData);
+    UserState getUsersCurrentUserState(Long userId);
+
+    UserProfileData getUserProfileData(Long userId);
+
+    void saveUserProfileData(Long userId, UserProfileData userProfileData);
+    void setUsersCurrentBotState(Long userId, BotState botState);
+
+    BotState getUsersCurrentBotState(Long userId);
 }

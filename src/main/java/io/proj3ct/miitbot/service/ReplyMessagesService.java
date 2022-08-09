@@ -1,5 +1,6 @@
-package ru.home.mywizard_bot.service;
+package io.proj3ct.miitbot.service;
 
+import io.proj3ct.miitbot.constrants.UserState;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
@@ -10,18 +11,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 @Service
 public class ReplyMessagesService {
 
-    private LocaleMessageService localeMessageService;
-
-    public ReplyMessagesService(LocaleMessageService messageService) {
-        this.localeMessageService = messageService;
-    }
-
-    public SendMessage getReplyMessage(long chatId, String replyMessage) {
-        return new SendMessage(chatId, localeMessageService.getMessage(replyMessage));
-    }
-
-    public SendMessage getReplyMessage(long chatId, String replyMessage, Object... args) {
-        return new SendMessage(chatId, localeMessageService.getMessage(replyMessage, args));
+    public SendMessage getReplyMessage(long chatId, UserState userState) {
+        return new SendMessage(String.valueOf(chatId), userState.getMessage());
     }
 
 }

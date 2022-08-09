@@ -1,10 +1,9 @@
 package io.proj3ct.miitbot.botapi.handlers;
 
 
-import io.proj3ct.miitbot.constrants.UserState;
 import io.proj3ct.miitbot.cache.UserDataCache;
 import io.proj3ct.miitbot.constrants.BotState;
-import io.proj3ct.miitbot.dto.UserProfileData;
+import io.proj3ct.miitbot.service.MainMenuService;
 import io.proj3ct.miitbot.service.ReplyMessagesService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,14 +19,14 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class FiledProfileHandler implements InputMessageHandler {
+public class MainMenuHandler implements InputMessageHandler {
     private UserDataCache userDataCache;
     private ReplyMessagesService messagesService;
+    private MainMenuService mainMenuService;
 
     @Override
     public SendMessage handle(Message message) {
-
-        return processUsersInput(message);
+        return mainMenuService.getMainMenuMessage(message.getChatId(), "Главное меню");
     }
 
     @Override
@@ -35,10 +34,7 @@ public class FiledProfileHandler implements InputMessageHandler {
         return BotState.SHOW_MENU;
     }
 
-    private SendMessage processUsersInput(Message inputMsg) {
-        Long userId = inputMsg.getFrom().getId();
-        return new SendMessage(String.valueOf(userId), "OKEY");
-    }
+
 
 
 }

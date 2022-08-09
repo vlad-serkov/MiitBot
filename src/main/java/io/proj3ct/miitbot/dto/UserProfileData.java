@@ -1,21 +1,19 @@
-package io.proj3ct.miitbot.botapi.handlers.fillingprofile;
+package io.proj3ct.miitbot.dto;
 
-import lombok.AccessLevel;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 /**
  * Данные анкеты пользователя
  */
-
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserProfileData {
     String name;
-    String gender;
-    String color;
-    String movie;
-    String song;
     int age;
-    int number;
+    String typeMat;
+    String institute;
 }
