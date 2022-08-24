@@ -19,11 +19,7 @@ import java.util.List;
 public class MainMenuService {
 
     public SendMessage getMainMenuMessage(final long chatId, final String textMessage) {
-        final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard();
-        final SendMessage mainMenuMessage =
-                createMessageWithKeyboard(chatId, textMessage, replyKeyboardMarkup);
-
-        return mainMenuMessage;
+        return createMessageWithKeyboard(chatId, textMessage, getMainMenuKeyboard());
     }
 
     private ReplyKeyboardMarkup getMainMenuKeyboard() {
@@ -38,7 +34,7 @@ public class MainMenuService {
         KeyboardRow row1 = new KeyboardRow();
         KeyboardRow row2 = new KeyboardRow();
         KeyboardRow row3 = new KeyboardRow();
-        row1.add(new KeyboardButton("Получить предсказание"));
+        row1.add(new KeyboardButton("Пока не работает"));
         row2.add(new KeyboardButton("Моя анкета"));
         row3.add(new KeyboardButton("Помощь"));
         keyboard.add(row1);

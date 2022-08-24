@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-class UserStateContextTest {
+class AskStateContextTest {
 
     @Test
     void processInputMessage() {

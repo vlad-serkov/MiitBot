@@ -2,6 +2,7 @@ package io.proj3ct.miitbot.botapi;
 
 import io.proj3ct.miitbot.botapi.handlers.InputMessageHandler;
 import io.proj3ct.miitbot.constrants.BotState;
+import io.proj3ct.miitbot.test.PartialBotMethodFacade;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -15,13 +16,13 @@ import java.util.Map;
  */
 @Component
 public class BotStateContext {
-    private Map<BotState, InputMessageHandler> messageHandlers = new HashMap<>();
+    private final Map<BotState, InputMessageHandler> messageHandlers = new HashMap<>();
 
     public BotStateContext(List<InputMessageHandler> messageHandlers) {
         messageHandlers.forEach(handler -> this.messageHandlers.put(handler.getHandlerName(), handler));
     }
 
-    public SendMessage processInputMessage(BotState currentState, Message message) {
+    public PartialBotMethodFacade<?> processInputMessage(BotState currentState, Message message) {
         InputMessageHandler currentMessageHandler = findMessageHandler(currentState);
         return currentMessageHandler.handle(message);
     }
@@ -29,9 +30,6 @@ public class BotStateContext {
     private InputMessageHandler findMessageHandler(BotState currentState) {
         return messageHandlers.get(currentState);
     }
-
-
-
 
 }
 

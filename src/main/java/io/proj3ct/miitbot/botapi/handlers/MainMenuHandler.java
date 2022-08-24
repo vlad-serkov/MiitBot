@@ -5,6 +5,8 @@ import io.proj3ct.miitbot.cache.UserDataCache;
 import io.proj3ct.miitbot.constrants.BotState;
 import io.proj3ct.miitbot.service.MainMenuService;
 import io.proj3ct.miitbot.service.ReplyMessagesService;
+import io.proj3ct.miitbot.test.PartialBotMethodFacade;
+import io.proj3ct.miitbot.test.SendMessageFacade;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,8 +27,8 @@ public class MainMenuHandler implements InputMessageHandler {
     private MainMenuService mainMenuService;
 
     @Override
-    public SendMessage handle(Message message) {
-        return mainMenuService.getMainMenuMessage(message.getChatId(), "Главное меню");
+    public PartialBotMethodFacade<?> handle(Message message) {
+        return new SendMessageFacade(mainMenuService.getMainMenuMessage(message.getChatId(), "Главное меню (тут нужно что-то написать)"));
     }
 
     @Override

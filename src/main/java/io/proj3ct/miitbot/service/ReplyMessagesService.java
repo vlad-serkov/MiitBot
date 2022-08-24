@@ -1,6 +1,7 @@
 package io.proj3ct.miitbot.service;
 
-import io.proj3ct.miitbot.constrants.UserState;
+import io.proj3ct.miitbot.constrants.AskState;
+import io.proj3ct.miitbot.test.SendMessageFacade;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
@@ -11,8 +12,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 @Service
 public class ReplyMessagesService {
 
-    public SendMessage getReplyMessage(long chatId, UserState userState) {
-        return new SendMessage(String.valueOf(chatId), userState.getMessage());
+    public SendMessageFacade getReplyMessage(long chatId, AskState askState) {
+        return new SendMessageFacade(new SendMessage(String.valueOf(chatId), askState.getMessage()));
     }
 
 }

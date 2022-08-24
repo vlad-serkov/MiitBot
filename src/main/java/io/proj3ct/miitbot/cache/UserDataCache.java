@@ -1,6 +1,6 @@
 package io.proj3ct.miitbot.cache;
 
-import io.proj3ct.miitbot.constrants.UserState;
+import io.proj3ct.miitbot.constrants.AskState;
 import io.proj3ct.miitbot.constrants.BotState;
 import io.proj3ct.miitbot.dto.UserProfileData;
 import org.springframework.stereotype.Component;
@@ -16,22 +16,21 @@ import java.util.Map;
 
 @Component
 public class UserDataCache implements DataCache{
-    private Map<Long, UserState> usersBotStates = new HashMap<>();
-    private Map<Long, UserProfileData> usersProfileData = new HashMap<>();
-
-    private Map<Long, BotState> usersFilingProfileState = new HashMap<>();
-
+    private final Map<Long, AskState> usersBotStates = new HashMap<>();
+    private final Map<Long, UserProfileData> usersProfileData = new HashMap<>();
+    private final Map<Long, BotState> usersFilingProfileState = new HashMap<>();
+    
     @Override
-    public void setUsersCurrentUserState(Long userId, UserState userState) {
-        usersBotStates.put(userId, userState);
+    public void setUsersCurrentUserState(Long userId, AskState askState) {
+        usersBotStates.put(userId, askState);
     }
     @Override
-    public UserState getUsersCurrentUserState(Long userId) {
-        UserState userState = usersBotStates.get(userId);
-        if (userState == null) {
-            return UserState.ASK_NAME;
+    public AskState getUsersCurrentUserState(Long userId) {
+        AskState askState = usersBotStates.get(userId);
+        if (askState == null) {
+            return AskState.ASK_FULL_NAME;
         }
-        return userState;
+        return askState;
     }
     @Override
     public UserProfileData getUserProfileData(Long userId) {
