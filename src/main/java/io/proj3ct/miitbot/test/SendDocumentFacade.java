@@ -10,7 +10,7 @@ public class SendDocumentFacade implements PartialBotMethodFacade<SendDocument>{
     private final String message;
 
     public SendDocumentFacade( String chatId, UserProfileData userProfile, WordService wordService) {
-        this.message = userProfile.getTypeMat().getMessage();
+        this.message = "Подготовьте копии документов, указанные в заявлении, и принесите в кабинет вашего ФПОС, у каждого института они разные. ИУЦТ-1522, ИЭФ-3602, ИТТСУ-2323, ЮИ-6004, ИПСС-7719, ИМТК-12307";
         this.document = new SendDocument(chatId, wordService.getInputFile(chatId, userProfile.getTypeMat().getPath(), userProfile));
     }
 

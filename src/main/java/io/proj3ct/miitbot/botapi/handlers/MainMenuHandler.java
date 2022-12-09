@@ -28,7 +28,7 @@ public class MainMenuHandler implements InputMessageHandler {
 
     @Override
     public PartialBotMethodFacade<?> handle(Message message) {
-        return new SendMessageFacade(mainMenuService.getMainMenuMessage(message.getChatId(), "Главное меню (тут нужно что-то написать)"));
+        return new SendMessageFacade(mainMenuService.getMainMenuMessage(message.getChatId(), "« Здравствуйте. Этот чат-бот поможет вам с оформлением документов на материальную помощь. Введи команду: \n /make  -  чтобы начать заполнение заявления \n /stop - чтобы закончить заполнять заявление и начать заново "));
     }
 
     @Override

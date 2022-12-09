@@ -22,12 +22,12 @@ public class GoogleSheetService {
         ValueRange appendBody = new ValueRange().setValues(Collections.singletonList(
            Arrays.asList(
                    userProfileData.getFullName(),
-                   userProfileData.getTypeMat(),
+                   userProfileData.getTypeMat().getText(),
                    userProfileData.getInstitute(),
                    userProfileData.getCourseNumber(),
                    userProfileData.getGroup(),
                    userProfileData.getAddress(),
-                   phoneNumberService.formatNumber(userProfileData.getPhoneNumber()),
+                   userProfileData.getPhoneNumber(),
                    userProfileData.getSerialPassport(),
                    userProfileData.getPassportIssued(),
                    String.valueOf(userProfileData.getDateOfBirthday()),
@@ -38,7 +38,6 @@ public class GoogleSheetService {
         ));
 
         try {
-
             sheets.spreadsheets().values()
                     .append(googleSheetConfig.getSpreadsheetId(), "A1:M1", appendBody)
                     .setValueInputOption("USER_ENTERED")

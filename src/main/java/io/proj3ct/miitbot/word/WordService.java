@@ -55,12 +55,12 @@ public class WordService {
             document.getRange().replaceText("$ФИО", profileData.getFullName());
             document.getRange().replaceText("$ГРУППА", profileData.getGroup());
             document.getRange().replaceText("$КУРС", String.valueOf(profileData.getCourseNumber()));
-            document.getRange().replaceText("$ЗАРЕГИСТРИРОВАН", profileData.getAddress());
+            document.getRange().replaceText("$АДРЕС", profileData.getAddress());
             document.getRange().replaceText("$ИНН", profileData.getInn());
             document.getRange().replaceText("$СЕРИЯ_НОМЕР", profileData.getSerialPassport());
             document.getRange().replaceText("$ДАТА_РОЖДЕНИЯ", String.valueOf(profileData.getDateOfBirthday()));
             document.getRange().replaceText("$НОМЕР_ПРОФ_БИЛЕТА", profileData.getUnionCard());
-            document.getRange().replaceText("$ЛИЦЕВОЙ_СЧЕТ", profileData.getBankBook());
+            document.getRange().replaceText("$ЛИЦЕВОЙ_СЧЁТ", profileData.getBankBook());
             document.getRange().replaceText("$БИК_БАНКА", profileData.getBankBIK());
             document.getRange().replaceText("$ТЕЛЕФОН", phoneNumberService.formatNumber(profileData.getPhoneNumber()));
             document.getRange().replaceText("$ВЫДАН", profileData.getPassportIssued());

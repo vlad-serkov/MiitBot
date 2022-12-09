@@ -23,7 +23,7 @@ import java.util.List;
 @Setter
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ButtonLossOfSurvivor implements CallBackHandler {
+public class ButtonLossOfSurvivor implements CallBackHandler, MatType {
     int serial = 5;
     @Autowired
     UserDataCache userDataCache;

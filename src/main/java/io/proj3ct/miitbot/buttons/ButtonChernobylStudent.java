@@ -23,7 +23,7 @@ import java.util.List;
 @Setter
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ButtonChernobylStudent implements CallBackHandler {
+public class ButtonChernobylStudent implements CallBackHandler , MatType{
     int serial = 10;
     @Autowired
     private UserDataCache userDataCache;

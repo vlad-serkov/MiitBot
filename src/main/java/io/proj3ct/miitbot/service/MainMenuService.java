@@ -3,7 +3,8 @@ package io.proj3ct.miitbot.service;
 
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardRemove;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
@@ -22,37 +23,30 @@ public class MainMenuService {
         return createMessageWithKeyboard(chatId, textMessage, getMainMenuKeyboard());
     }
 
-    private ReplyKeyboardMarkup getMainMenuKeyboard() {
+    private ReplyKeyboardRemove getMainMenuKeyboard() {
 
-        final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        replyKeyboardMarkup.setSelective(true);
-        replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(false);
+        final ReplyKeyboardRemove ReplyKeyboardRemove = new ReplyKeyboardRemove();
+        ReplyKeyboardRemove.setSelective(true);
+
 
         List<KeyboardRow> keyboard = new ArrayList<>();
 
         KeyboardRow row1 = new KeyboardRow();
-        KeyboardRow row2 = new KeyboardRow();
-        KeyboardRow row3 = new KeyboardRow();
-        row1.add(new KeyboardButton("Пока не работает"));
-        row2.add(new KeyboardButton("Моя анкета"));
-        row3.add(new KeyboardButton("Помощь"));
+        row1.add(new KeyboardButton("/make"));
         keyboard.add(row1);
-        keyboard.add(row2);
-        keyboard.add(row3);
-        replyKeyboardMarkup.setKeyboard(keyboard);
-        return replyKeyboardMarkup;
+        ReplyKeyboardRemove.setRemoveKeyboard(true);
+        return ReplyKeyboardRemove;
     }
 
     private SendMessage createMessageWithKeyboard(final long chatId,
                                                   String textMessage,
-                                                  final ReplyKeyboardMarkup replyKeyboardMarkup) {
+                                                  final ReplyKeyboardRemove ReplyKeyboardRemove) {
         final SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(chatId);
         sendMessage.setText(textMessage);
-        if (replyKeyboardMarkup != null) {
-            sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        if (ReplyKeyboardRemove != null) {
+            sendMessage.setReplyMarkup(ReplyKeyboardRemove);
         }
         return sendMessage;
     }

@@ -23,7 +23,7 @@ import java.util.List;
 @Setter
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ButtonLivingInHostel implements CallBackHandler {
+public class ButtonLivingInHostel implements CallBackHandler, MatType {
     int serial = 12;
 
     @Autowired

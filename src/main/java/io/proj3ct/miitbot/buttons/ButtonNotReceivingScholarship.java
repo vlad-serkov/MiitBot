@@ -23,7 +23,7 @@ import java.util.List;
 @Setter
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ButtonNotReceivingScholarship implements CallBackHandler {
+public class ButtonNotReceivingScholarship implements CallBackHandler, MatType {
     int serial = 13;
     @Autowired
     UserDataCache userDataCache;

@@ -23,7 +23,7 @@ import java.util.List;
 @Setter
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ButtonRaisingChild implements CallBackHandler {
+public class ButtonRaisingChild implements CallBackHandler, MatType {
     int serial = 3;
     @Autowired
     UserDataCache userDataCache;

@@ -23,7 +23,7 @@ import java.util.List;
 @Setter
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ButtonOrphan implements CallBackHandler {
+public class ButtonOrphan implements CallBackHandler, MatType {
 
     int serial = 1;
     @Autowired

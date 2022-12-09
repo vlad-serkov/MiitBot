@@ -4,6 +4,7 @@ import io.proj3ct.miitbot.constrants.Buttons;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -30,6 +31,10 @@ public class UserProfileData {
     String bankBIK;
     String unionCard;
 
-
-
+    public String getDateOfBirthday() {
+        String pattern = "dd.MM.yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        String date = simpleDateFormat.format(dateOfBirthday);
+        return date;
+    }
 }

@@ -23,7 +23,7 @@ import java.util.List;
 @Setter
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ButtonDivorceOfParent implements CallBackHandler {
+public class ButtonDivorceOfParent implements CallBackHandler, MatType {
     int serial = 11;
     @Autowired
     UserDataCache userDataCache;

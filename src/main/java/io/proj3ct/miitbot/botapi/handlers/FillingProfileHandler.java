@@ -1,6 +1,7 @@
 package io.proj3ct.miitbot.botapi.handlers;
 
 import io.proj3ct.miitbot.buttons.CallBackHandler;
+import io.proj3ct.miitbot.buttons.MatType;
 import io.proj3ct.miitbot.constrants.AskState;
 import io.proj3ct.miitbot.cache.UserDataCache;
 import io.proj3ct.miitbot.constrants.BotState;
@@ -20,6 +21,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -31,14 +34,23 @@ import java.util.List;
 
 @Slf4j
 @Component
-@AllArgsConstructor
 public class FillingProfileHandler implements InputMessageHandler {
     private UserDataCache userDataCache;
     private ReplyMessagesService messagesService;
 
-    private List<CallBackHandler> callBackHandlers;
+    private List<MatType> callBackHandlers;
     private WordService wordService;
     GoogleSheetService googleSheetService;
+    SimpleDateFormat formater;
+
+    public FillingProfileHandler(UserDataCache userDataCache, ReplyMessagesService messagesService, List<MatType> callBackHandlers, WordService wordService, GoogleSheetService googleSheetService) {
+        this.userDataCache = userDataCache;
+        this.messagesService = messagesService;
+        this.callBackHandlers = callBackHandlers;
+        this.wordService = wordService;
+        this.googleSheetService = googleSheetService;
+        this.formater = new SimpleDateFormat("dd.MM.yyyy");
+    }
 
     @Override
     public PartialBotMethodFacade<?> handle(Message message) {
@@ -78,7 +90,11 @@ public class FillingProfileHandler implements InputMessageHandler {
 
         if (askState.equals(AskState.ASK_MATPOMOCH)) {
 
-            profileData.setDateOfBirthday(Date.valueOf(usersAnswer));
+            try {
+                profileData.setDateOfBirthday(formater.parse(usersAnswer));
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
             userDataCache.saveUserProfileData(userId, profileData);
             userDataCache.setUsersCurrentUserState(userId, AskState.ASK_INSTITUTE);
 
@@ -132,12 +148,19 @@ public class FillingProfileHandler implements InputMessageHandler {
         if (askState.equals(AskState.ASK_PASSPORT_ISSUED)) {
             profileData.setSerialPassport(usersAnswer);
             userDataCache.saveUserProfileData(userId, profileData);
-            userDataCache.setUsersCurrentUserState(userId, AskState.ASK_INN);
+            userDataCache.setUsersCurrentUserState(userId, AskState.ASK_PASSPORT_DATE);
 
             return messagesService.getReplyMessage(chatId, AskState.ASK_PASSPORT_ISSUED);
         }
-        if (askState.equals(AskState.ASK_INN)) {
+        if (askState.equals(AskState.ASK_PASSPORT_DATE)) {
             profileData.setPassportIssued(usersAnswer);
+            userDataCache.saveUserProfileData(userId, profileData);
+            userDataCache.setUsersCurrentUserState(userId, AskState.ASK_INN);
+
+            return messagesService.getReplyMessage(chatId, AskState.ASK_PASSPORT_DATE);
+        }
+        if (askState.equals(AskState.ASK_INN)) {
+            profileData.setPassportIssued(profileData.getPassportIssued() + " " + usersAnswer);
             userDataCache.saveUserProfileData(userId, profileData);
             userDataCache.setUsersCurrentUserState(userId, AskState.ASK_BANK_BOOK);
 
@@ -160,19 +183,21 @@ public class FillingProfileHandler implements InputMessageHandler {
         if (askState.equals(AskState.ASK_UNION_CARD)) {
             profileData.setBankBIK(usersAnswer);
             userDataCache.saveUserProfileData(userId, profileData);
-            userDataCache.setUsersCurrentUserState(userId, AskState.FINISH);
+            userDataCache.setUsersCurrentUserState(userId, AskState.ASK_ALL);
             return messagesService.getReplyMessage(chatId, AskState.ASK_UNION_CARD);
         }
-
-
+        if (askState.equals(AskState.ASK_ALL)) {
+            profileData.setUnionCard(usersAnswer);
+            userDataCache.saveUserProfileData(userId, profileData);
+            userDataCache.setUsersCurrentUserState(userId, AskState.FINISH);
+            return messagesService.getReplyMessage(chatId, AskState.ASK_ALL, profileData);
+        }
 
         if (askState.equals(AskState.FINISH)) {
-
-            profileData.setUnionCard(usersAnswer);
             userDataCache.saveUserProfileData(userId, profileData);
             userDataCache.setUsersCurrentUserState(userId, AskState.ASK_FULL_NAME);
             userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MENU);
-
+            googleSheetService.saveUser(profileData);
             return new SendDocumentFacade(String.valueOf(chatId), profileData, wordService);
         }
 
@@ -182,7 +207,15 @@ public class FillingProfileHandler implements InputMessageHandler {
     private InlineKeyboardMarkup getButtonsMarkup() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        callBackHandlers.stream().sorted(Comparator.comparingInt(CallBackHandler::getSerial)).forEach(callBackHandler -> rowList.add(callBackHandler.getKeyboardButton()));
+        callBackHandlers.stream().map(matType -> (CallBackHandler) matType).sorted(Comparator.comparingInt(CallBackHandler::getSerial)).forEach(callBackHandler -> rowList.add(callBackHandler.getKeyboardButton()));
+        inlineKeyboardMarkup.setKeyboard(rowList);
+        return inlineKeyboardMarkup;
+    }
+
+    private InlineKeyboardMarkup getButtonsMarkupForCheck() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        callBackHandlers.stream().map(matType -> (CallBackHandler) matType).sorted(Comparator.comparingInt(CallBackHandler::getSerial)).forEach(callBackHandler -> rowList.add(callBackHandler.getKeyboardButton()));
         inlineKeyboardMarkup.setKeyboard(rowList);
         return inlineKeyboardMarkup;
     }
