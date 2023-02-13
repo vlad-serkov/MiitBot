@@ -21,12 +21,12 @@ import java.util.List;
 @Setter
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ButtonAgreement implements CallBackHandler , CheckButton{
+public class ButtonNotAgreement implements CallBackHandler , CheckButton{
 
-    int serial = 11;
+    int serial = 12;
     @Autowired
     private UserDataCache userDataCache;
-    private Buttons button = Buttons.BUTTON_AGREEMENT;
+    private Buttons button = Buttons.BUTTON_NOT_AGREEMENT;
     private InlineKeyboardButton keyboardButton;
 
     @PostConstruct
@@ -48,9 +48,8 @@ public class ButtonAgreement implements CallBackHandler , CheckButton{
 
     @Override
     public SendMessage handle(final Long userId) {
-        userDataCache.setUsersCurrentUserState(userId, AskState.FINISH);
-
-        return new SendMessage(String.valueOf(userId), AskState.FINISH.getMessage());
+        userDataCache.setUsersCurrentUserState(userId, AskState.ASK_FULL_NAME);
+        return new SendMessage(String.valueOf(userId), AskState.ASK_FULL_NAME.getMessage());
     }
 
     @Override

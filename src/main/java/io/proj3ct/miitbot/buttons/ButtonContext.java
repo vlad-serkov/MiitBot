@@ -15,7 +15,7 @@ public class ButtonContext {
         callBackHandler.forEach(handler -> this.callBackHandler.put(handler.getButtonCallbackData(), handler));
     }
 
-    public SendMessage processInputMessage(String callback, Long userId) {
+    public SendMessage  processInputMessage(String callback, Long userId) {
         CallBackHandler currentMessageHandler = findMessageHandler(callback);
         return currentMessageHandler.handle(userId);
     }

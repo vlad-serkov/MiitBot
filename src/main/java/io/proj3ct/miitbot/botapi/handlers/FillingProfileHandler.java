@@ -1,6 +1,7 @@
 package io.proj3ct.miitbot.botapi.handlers;
 
 import io.proj3ct.miitbot.buttons.CallBackHandler;
+import io.proj3ct.miitbot.buttons.CheckButton;
 import io.proj3ct.miitbot.buttons.MatType;
 import io.proj3ct.miitbot.constrants.AskState;
 import io.proj3ct.miitbot.cache.UserDataCache;
@@ -11,8 +12,8 @@ import io.proj3ct.miitbot.service.ReplyMessagesService;
 import io.proj3ct.miitbot.test.PartialBotMethodFacade;
 import io.proj3ct.miitbot.test.SendDocumentFacade;
 import io.proj3ct.miitbot.test.SendMessageFacade;
+import io.proj3ct.miitbot.validator.*;
 import io.proj3ct.miitbot.word.WordService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -20,7 +21,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,13 +42,19 @@ public class FillingProfileHandler implements InputMessageHandler {
     private WordService wordService;
     GoogleSheetService googleSheetService;
     SimpleDateFormat formater;
+    private List<CheckButton> callBackHandlersCheck;
 
-    public FillingProfileHandler(UserDataCache userDataCache, ReplyMessagesService messagesService, List<MatType> callBackHandlers, WordService wordService, GoogleSheetService googleSheetService) {
+    public FillingProfileHandler(UserDataCache userDataCache,
+                                 ReplyMessagesService messagesService,
+                                 List<MatType> callBackHandlers, WordService wordService,
+                                 GoogleSheetService googleSheetService,
+                                 final List<CheckButton> callBackHandlersCheck) {
         this.userDataCache = userDataCache;
         this.messagesService = messagesService;
         this.callBackHandlers = callBackHandlers;
         this.wordService = wordService;
         this.googleSheetService = googleSheetService;
+        this.callBackHandlersCheck = callBackHandlersCheck;
         this.formater = new SimpleDateFormat("dd.MM.yyyy");
     }
 
@@ -111,6 +117,12 @@ public class FillingProfileHandler implements InputMessageHandler {
         }
 
         if (askState.equals(AskState.ASK_GROUP)) {
+            try {
+                InstituteValidator.validate(usersAnswer);
+            } catch (InstituteValidator.IllegalInstituteException e) {
+                return new SendMessageFacade(new SendMessage(String.valueOf(chatId), e.getMessage()));
+            }
+
             profileData.setInstitute(usersAnswer);
             userDataCache.saveUserProfileData(userId, profileData);
             userDataCache.setUsersCurrentUserState(userId, AskState.ASK_COURSE_NUMBER);
@@ -118,6 +130,11 @@ public class FillingProfileHandler implements InputMessageHandler {
             return messagesService.getReplyMessage(chatId, AskState.ASK_GROUP);
         }
         if (askState.equals(AskState.ASK_COURSE_NUMBER)) {
+            try {
+                GroupValidator.validate(usersAnswer);
+            } catch (GroupValidator.IllegalGroupException e) {
+                return new SendMessageFacade(new SendMessage(String.valueOf(chatId), e.getMessage()));
+            }
             profileData.setGroup(usersAnswer);
             userDataCache.saveUserProfileData(userId, profileData);
             userDataCache.setUsersCurrentUserState(userId, AskState.ASK_ADDRESS);
@@ -125,6 +142,11 @@ public class FillingProfileHandler implements InputMessageHandler {
             return messagesService.getReplyMessage(chatId, AskState.ASK_COURSE_NUMBER);
         }
         if (askState.equals(AskState.ASK_ADDRESS)) {
+            try {
+                CourseValidator.validate(usersAnswer);
+            } catch (CourseValidator.IllegalCourseException e) {
+                return new SendMessageFacade(new SendMessage(String.valueOf(chatId), e.getMessage()));
+            }
             profileData.setCourseNumber(Integer.parseInt(usersAnswer));
             userDataCache.saveUserProfileData(userId, profileData);
             userDataCache.setUsersCurrentUserState(userId, AskState.ASK_PHONE_NUMBER);
@@ -139,6 +161,7 @@ public class FillingProfileHandler implements InputMessageHandler {
             return messagesService.getReplyMessage(chatId, AskState.ASK_PHONE_NUMBER);
         }
         if (askState.equals(AskState.ASK_SERIAL_OF_PASSPORT)) {
+
             profileData.setPhoneNumber(usersAnswer);
             userDataCache.saveUserProfileData(userId, profileData);
             userDataCache.setUsersCurrentUserState(userId, AskState.ASK_PASSPORT_ISSUED);
@@ -146,6 +169,11 @@ public class FillingProfileHandler implements InputMessageHandler {
             return messagesService.getReplyMessage(chatId, AskState.ASK_SERIAL_OF_PASSPORT);
         }
         if (askState.equals(AskState.ASK_PASSPORT_ISSUED)) {
+            try {
+                SerialPassportValidator.validate(usersAnswer);
+            } catch (SerialPassportValidator.IllegalSerialPassportException e) {
+                return new SendMessageFacade(new SendMessage(String.valueOf(chatId), e.getMessage()));
+            }
             profileData.setSerialPassport(usersAnswer);
             userDataCache.saveUserProfileData(userId, profileData);
             userDataCache.setUsersCurrentUserState(userId, AskState.ASK_PASSPORT_DATE);
@@ -167,6 +195,11 @@ public class FillingProfileHandler implements InputMessageHandler {
             return messagesService.getReplyMessage(chatId, AskState.ASK_INN);
         }
         if (askState.equals(AskState.ASK_BANK_BOOK)) {
+            try {
+                InnValidator.validate(usersAnswer);
+            } catch (InnValidator.IllegalInnException e) {
+                return new SendMessageFacade(new SendMessage(String.valueOf(chatId), e.getMessage()));
+            }
             profileData.setInn(usersAnswer);
             userDataCache.saveUserProfileData(userId, profileData);
             userDataCache.setUsersCurrentUserState(userId, AskState.ASK_BANK_BIK);
@@ -197,7 +230,11 @@ public class FillingProfileHandler implements InputMessageHandler {
             userDataCache.saveUserProfileData(userId, profileData);
             userDataCache.setUsersCurrentUserState(userId, AskState.ASK_FULL_NAME);
             userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MENU);
-            googleSheetService.saveUser(profileData);
+            try {
+                googleSheetService.saveUser(profileData);
+            } catch (Exception e) {
+                log.info("Error saving user into GoogleSheet");
+            }
             return new SendDocumentFacade(String.valueOf(chatId), profileData, wordService);
         }
 
@@ -215,7 +252,7 @@ public class FillingProfileHandler implements InputMessageHandler {
     private InlineKeyboardMarkup getButtonsMarkupForCheck() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        callBackHandlers.stream().map(matType -> (CallBackHandler) matType).sorted(Comparator.comparingInt(CallBackHandler::getSerial)).forEach(callBackHandler -> rowList.add(callBackHandler.getKeyboardButton()));
+        callBackHandlersCheck.stream().map(matType -> (CallBackHandler) matType).sorted(Comparator.comparingInt(CallBackHandler::getSerial)).forEach(callBackHandler -> rowList.add(callBackHandler.getKeyboardButton()));
         inlineKeyboardMarkup.setKeyboard(rowList);
         return inlineKeyboardMarkup;
     }
