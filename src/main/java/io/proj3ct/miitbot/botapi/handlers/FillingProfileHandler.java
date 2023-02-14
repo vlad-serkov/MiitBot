@@ -99,7 +99,7 @@ public class FillingProfileHandler implements InputMessageHandler {
             try {
                 profileData.setDateOfBirthday(formater.parse(usersAnswer));
             } catch (ParseException e) {
-                throw new RuntimeException(e);
+                return new SendMessageFacade(new SendMessage(String.valueOf(chatId), "Данные введены не верно, попробуйте еще раз"));
             }
             userDataCache.saveUserProfileData(userId, profileData);
             userDataCache.setUsersCurrentUserState(userId, AskState.ASK_INSTITUTE);
@@ -207,6 +207,11 @@ public class FillingProfileHandler implements InputMessageHandler {
             return messagesService.getReplyMessage(chatId, AskState.ASK_BANK_BOOK);
         }
         if (askState.equals(AskState.ASK_BANK_BIK)) {
+            try {
+                BankBookValidator.validate(usersAnswer);
+            } catch (BankBookValidator.IllegalBankBookException e) {
+                return new SendMessageFacade(new SendMessage(String.valueOf(chatId), e.getMessage()));
+            }
             profileData.setBankBook(usersAnswer);
             userDataCache.saveUserProfileData(userId, profileData);
             userDataCache.setUsersCurrentUserState(userId, AskState.ASK_UNION_CARD);
@@ -214,6 +219,11 @@ public class FillingProfileHandler implements InputMessageHandler {
             return messagesService.getReplyMessage(chatId, AskState.ASK_BANK_BIK);
         }
         if (askState.equals(AskState.ASK_UNION_CARD)) {
+            try {
+                BankBookValidator.validate(usersAnswer);
+            } catch (BankBookValidator.IllegalBankBookException e) {
+                return new SendMessageFacade(new SendMessage(String.valueOf(chatId), e.getMessage()));
+            }
             profileData.setBankBIK(usersAnswer);
             userDataCache.saveUserProfileData(userId, profileData);
             userDataCache.setUsersCurrentUserState(userId, AskState.ASK_ALL);

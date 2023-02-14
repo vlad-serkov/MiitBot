@@ -17,7 +17,7 @@ public enum Buttons {
             "src/main/resources/Ворд заявления/6_Roditeli_invalidy_pensionery.doc"
             
             ),
-    BUTTON_LARGE_FAMILIES("7 Многодетные семьи ", "buttonLargeFamilies", "src/main/resources/Ворд заявления/6_Roditeli_invalidy_pensionery.doc"),
+    BUTTON_LARGE_FAMILIES("7 Многодетные семьи ", "buttonLargeFamilies", "src/main/resources/Ворд заявления/7_Mnogodetnye_semi.doc"),
     BUTTON_PARTICIPANTS_IN_HOSTILITIES("8 Участники военных действий", "buttonParticipantsInHostilities", "src/main/resources/Ворд заявления/8_uchastnik_voennykh_deystviy.doc"),
     BUTTON_DISPENSER_REGISTRATION("9 Диспансерный учёт", "buttonDispenserRegistration", "src/main/resources/Ворд заявления/9_Disp_uchet.doc"),
     BUTTON_CHERNOBYL_STUDENT("10 Студент чернобылец ", "buttonChernobylStudent", "src/main/resources/Ворд заявления/10_student-chernobylets.doc"),

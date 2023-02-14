@@ -4,8 +4,8 @@ public class GroupValidator  {
 
 
     public static void validate( String group) throws IllegalGroupException {
-        if (group.charAt(3)!='-' && group.length()!=7) {
-            throw new IllegalGroupException("Данный введены не верно, попробуйте еще раз");
+        if (group.charAt(3) != '-' && group.length() != 7) {
+            throw new IllegalGroupException("Данные введены не верно, попробуйте еще раз");
         }
     }
 

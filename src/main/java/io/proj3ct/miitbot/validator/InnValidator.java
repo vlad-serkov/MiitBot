@@ -5,7 +5,7 @@ public class InnValidator {
 
     public static void validate( String inn) throws IllegalInnException {
         if (inn.length()!=12) {
-            throw new IllegalInnException("Данный введены не верно, попробуйте еще раз");
+            throw new IllegalInnException("Данные введены не верно, попробуйте еще раз");
         }
     }
 
