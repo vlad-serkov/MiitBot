@@ -161,7 +161,11 @@ public class FillingProfileHandler implements InputMessageHandler {
             return messagesService.getReplyMessage(chatId, AskState.ASK_PHONE_NUMBER);
         }
         if (askState.equals(AskState.ASK_SERIAL_OF_PASSPORT)) {
-
+            try {
+                PhoneNumberValidator.validate(usersAnswer);
+            } catch (PhoneNumberValidator.IllegalPhoneNumberException e) {
+                return new SendMessageFacade(new SendMessage(String.valueOf(chatId), e.getMessage()));
+            }
             profileData.setPhoneNumber(usersAnswer);
             userDataCache.saveUserProfileData(userId, profileData);
             userDataCache.setUsersCurrentUserState(userId, AskState.ASK_PASSPORT_ISSUED);
