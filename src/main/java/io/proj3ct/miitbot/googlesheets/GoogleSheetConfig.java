@@ -86,7 +86,7 @@ public class GoogleSheetConfig {
                 .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
                 .setAccessType("offline")
                 .build();
-        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8885).build();
+        LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8884).build();
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 }
