@@ -5,7 +5,7 @@ public class CourseValidator {
 
     public static void validate( String courseNumber) throws IllegalCourseException {
         int courseNumber1 = Integer.parseInt(courseNumber);
-        if (courseNumber1<1 || courseNumber1>6) {
+        if (courseNumber1<1 || courseNumber1>5) {
             throw new IllegalCourseException("Данные введены не верно, попробуйте еще раз");
         }
     }
