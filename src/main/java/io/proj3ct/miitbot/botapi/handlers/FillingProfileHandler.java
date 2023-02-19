@@ -212,8 +212,8 @@ public class FillingProfileHandler implements InputMessageHandler {
         }
         if (askState.equals(AskState.ASK_BANK_BIK)) {
             try {
-                BankBookValidator.validate(usersAnswer);
-            } catch (BankBookValidator.IllegalBankBookException e) {
+                BankBIKValidator.validate(usersAnswer);
+            } catch (BankBIKValidator.IllegalBankBIKException e) {
                 return new SendMessageFacade(new SendMessage(String.valueOf(chatId), e.getMessage()));
             }
             profileData.setBankBook(usersAnswer);
