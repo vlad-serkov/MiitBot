@@ -166,6 +166,7 @@ public class FillingProfileHandler implements InputMessageHandler {
             } catch (PhoneNumberValidator.IllegalPhoneNumberException e) {
                 return new SendMessageFacade(new SendMessage(String.valueOf(chatId), e.getMessage()));
             }
+
             profileData.setPhoneNumber(usersAnswer);
             userDataCache.saveUserProfileData(userId, profileData);
             userDataCache.setUsersCurrentUserState(userId, AskState.ASK_PASSPORT_ISSUED);
@@ -212,8 +213,8 @@ public class FillingProfileHandler implements InputMessageHandler {
         }
         if (askState.equals(AskState.ASK_BANK_BIK)) {
             try {
-                BankBIKValidator.validate(usersAnswer);
-            } catch (BankBIKValidator.IllegalBankBIKException e) {
+                BankBookValidator.validate(usersAnswer);
+            } catch (BankBookValidator.IllegalBankBookException e) {
                 return new SendMessageFacade(new SendMessage(String.valueOf(chatId), e.getMessage()));
             }
             profileData.setBankBook(usersAnswer);
@@ -224,8 +225,8 @@ public class FillingProfileHandler implements InputMessageHandler {
         }
         if (askState.equals(AskState.ASK_UNION_CARD)) {
             try {
-                BankBookValidator.validate(usersAnswer);
-            } catch (BankBookValidator.IllegalBankBookException e) {
+                BankBIKValidator.validate(usersAnswer);
+            } catch (BankBIKValidator.IllegalBankBIKException e) {
                 return new SendMessageFacade(new SendMessage(String.valueOf(chatId), e.getMessage()));
             }
             profileData.setBankBIK(usersAnswer);
